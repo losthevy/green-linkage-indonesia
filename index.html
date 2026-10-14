@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Green Linkage</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231B6B43'/%3E%3Cpath d='M6 18C6 10 10 6 18 6c0 8-4 12-12 12zM6 18l7-7' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ===== Leaflet core (inline) ===== */
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
+.leaflet-container{overflow:hidden;position:relative;outline:0;touch-action:none;-webkit-tap-highlight-color:transparent}
+.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{user-select:none;-webkit-user-drag:none}
+.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer,.leaflet-container .leaflet-tile{max-width:none!important;max-height:none!important;padding:0}
+.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}
+.leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}
+.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}
+.leaflet-control{position:relative;z-index:800;pointer-events:auto;float:left;clear:both}
+.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}
+.leaflet-right .leaflet-control{float:right;margin-right:10px}.leaflet-bottom .leaflet-control{margin-bottom:8px}.leaflet-left .leaflet-control{margin-left:10px}
+.leaflet-zoom-animated{transform-origin:0 0}.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile{transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}
+.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:grab}.leaflet-dragging .leaflet-grab{cursor:grabbing}
+.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-image-layer,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}
+.leaflet-marker-icon.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive{pointer-events:auto}
+.leaflet-tooltip{position:absolute;padding:7px 10px;background:var(--sf);border:1px solid var(--bd);border-radius:10px;color:var(--ink);white-space:nowrap;user-select:none;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.18);font:500 12.5px/1.35 var(--f)}
+.leaflet-control-attribution{background:color-mix(in srgb,var(--sf) 85%,transparent);margin:0;padding:1px 6px;font-size:10.5px;color:var(--mut);border-top-left-radius:6px}.leaflet-control-attribution a{color:var(--g)}
+.leaflet-control-scale-line{border:2px solid var(--mut);border-top:none;line-height:1.1;padding:2px 5px 1px;font-size:11px;white-space:nowrap;background:color-mix(in srgb,var(--sf) 80%,transparent);color:var(--ink)}
+/* ===== Token ===== */
+:root{--f:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--bg:#F2F6EF;--sf:#fff;--s2:#F7FAF4;--ink:#14281D;--mut:#5A7166;--g:#1B6B43;--g2:#2E8B57;--lm:#CFE8A9;--am:#C98A00;--rd:#C2392B;--bd:#DCE6D5;--hi:#E7F3E0;--hd:#12342A;--sea:#CFE1DD;--ld:#F6F9EE;--lb:#8FB197;--on:#fff;--sh:0 1px 2px rgba(20,40,29,.05),0 8px 24px rgba(20,40,29,.07);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0B1612;--sf:#13241C;--s2:#172B22;--ink:#E4EFE2;--mut:#9BB2A3;--g:#6FD39B;--g2:#3FAE74;--lm:#2C4A31;--am:#E3AD38;--rd:#EE7566;--bd:#24402F;--hi:#1A3326;--hd:#0D2219;--sea:#0A1614;--ld:#1C3727;--lb:#3F7255;--on:#0B1612;--sh:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.28);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0B1612;--sf:#13241C;--s2:#172B22;--ink:#E4EFE2;--mut:#9BB2A3;--g:#6FD39B;--g2:#3FAE74;--lm:#2C4A31;--am:#E3AD38;--rd:#EE7566;--bd:#24402F;--hi:#1A3326;--hd:#0D2219;--sea:#0A1614;--ld:#1C3727;--lb:#3F7255;--on:#0B1612;--sh:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.28);color-scheme:dark}
+/* ===== Dasar ===== */
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f);-webkit-font-smoothing:antialiased}
+svg{flex:none}button{font-family:inherit}
+header{position:sticky;top:0;z-index:1200;background:var(--hd);color:#fff;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px));box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.hin{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#3FAE74,#1B6B43);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.brand b{font-size:17px;display:block;line-height:1.15;letter-spacing:-.01em}.brand small{font-size:11.5px;opacity:.7;display:block}
+#seg{display:flex;background:rgba(255,255,255,.1);border-radius:22px;padding:3px}#seg button{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:#fff;padding:7px 12px;border-radius:18px;font:600 13px var(--f);cursor:pointer;transition:.2s}#seg button.on{background:#fff;color:var(--hd)}
+.tb2{background:rgba(255,255,255,.1);border:0;color:#fff;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
+main{max-width:1180px;margin:0 auto;padding:18px 16px 120px}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--sh);display:flex;gap:4px;padding:6px;z-index:1200;width:min(520px,calc(100% - 24px))}
+nav button{flex:1;background:none;border:0;color:var(--mut);padding:7px 4px;border-radius:14px;font:600 11.5px var(--f);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:.2s}nav button.on{background:var(--hi);color:var(--g)}nav em{font-style:normal;background:var(--am);color:#fff;border-radius:9px;padding:0 6px;font-size:10.5px}
+h1{font-size:clamp(24px,3.6vw,34px);line-height:1.15;margin:4px 0 8px;letter-spacing:-.02em}h2{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}h3{margin:0;font-size:16px}
+.eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g)}
+.hero{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin:4px 0 16px}.hero p{max-width:640px;margin:0}
+.ph{margin:4px 0 14px}.ph p{margin:2px 0 0}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:16px;margin:0 0 14px;box-shadow:var(--sh)}
+.ch{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.row{display:flex;gap:10px;align-items:center}.grow{flex:1;min-width:0}.mut{color:var(--mut);font-size:13px}.mt{margin:10px 0}.wrap{flex-wrap:wrap}
+.split{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;align-items:start}.two{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;align-items:start}.three{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (max-width:880px){.split,.two,.three{grid-template-columns:1fr}}
+/* Peta */
+.mapw{position:relative;isolation:isolate;height:min(66vh,580px);min-height:420px;border-radius:20px;overflow:hidden;border:1px solid var(--bd);margin-bottom:12px;box-shadow:var(--sh)}#mp{height:100%}
+.leaflet-container{background:var(--sea);font:inherit}.mm{position:relative;isolation:isolate;height:300px;border-radius:14px;overflow:hidden;border:1px solid var(--bd);margin:8px 0}.mm.tall{height:380px}
+.ovl{position:absolute;z-index:1001}.tr{top:12px;right:12px;display:flex;flex-direction:column;gap:6px}
+.ib{width:36px;height:36px;border-radius:10px;border:1px solid var(--bd);background:var(--sf);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.bl{left:12px;bottom:12px;background:color-mix(in srgb,var(--sf) 92%,transparent);backdrop-filter:blur(6px);border:1px solid var(--bd);border-radius:14px;padding:10px 12px;font-size:12px;display:grid;gap:4px;box-shadow:0 2px 10px rgba(0,0,0,.12)}.bl b{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}.bl span{display:flex;align-items:center;gap:7px}.bl i{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}
+.pin{position:relative;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:5px;padding:4px 9px 4px 6px;border-radius:14px;background:var(--sf);color:var(--ink);font:700 12px/1 var(--f);border:2px solid var(--c);box-shadow:0 3px 10px rgba(0,0,0,.25);white-space:nowrap;cursor:pointer;transition:transform .15s}
+.pin:hover{transform:translate(-50%,-50%) scale(1.08)}.pin i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}.pin .nm{display:none;font-weight:600}
+.pin.hijau{--c:var(--g2)}.pin.kuning{--c:var(--am)}.pin.merah{--c:var(--rd)}.pin.sel{box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 35%,transparent),0 3px 10px rgba(0,0,0,.3)}
+.zlo .pin{width:18px;height:18px;padding:0;border:2.5px solid #fff;background:var(--c);justify-content:center}.zlo .pin span,.zlo .pin i{display:none}
+.zhi .pin .nm{display:inline}
+.pin.merah::after{content:"";position:absolute;inset:-7px;border-radius:18px;border:2px solid var(--rd);animation:pl 1.9s ease-out infinite;pointer-events:none}@keyframes pl{from{transform:scale(.8);opacity:.9}to{transform:scale(1.4);opacity:0}}@media (prefers-reduced-motion:reduce){.pin.merah::after{animation:none}}
+.pl{display:block;width:12px;height:12px;background:#fff;border:2.5px solid var(--hd);transform:translate(-50%,-50%) rotate(45deg);box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:pointer}.pl.pilot{width:16px;height:16px;background:var(--g2);border-color:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--g2) 35%,transparent),0 1px 4px rgba(0,0,0,.35)}
+/* Kontrol */
+.toolbar{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center;margin:0 0 14px}.grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.grp>small{font-size:12px;color:var(--mut);font-weight:600;margin-right:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+.chip{border:1px solid var(--bd);background:var(--sf);color:var(--ink);padding:6px 13px;border-radius:18px;font:600 13px var(--f);cursor:pointer;transition:.15s}.chip:hover{border-color:var(--g2)}.chip.on{background:var(--g);color:var(--on);border-color:var(--g)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--g);color:var(--on);border:0;border-radius:12px;padding:10px 16px;font:600 14px var(--f);cursor:pointer;transition:.15s}.btn:hover{filter:brightness(1.07)}.btn.ghost{background:transparent;color:var(--g);border:1px solid var(--g)}.btn.rd{background:var(--rd);color:#fff}.btn.wide{width:100%;padding:12px}
+.b{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;color:#fff;white-space:nowrap}.b.hijau{background:var(--g2)}.b.kuning{background:var(--am)}.b.merah{background:var(--rd)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+.k{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:14px;display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;box-shadow:var(--sh)}.k .ki{grid-row:span 2;width:40px;height:40px;border-radius:12px;display:grid;place-items:center}.k b{font-size:22px;line-height:1.15;letter-spacing:-.01em}.k>span:last-child{font-size:12.5px;color:var(--mut)}
+.gauge{position:relative;height:10px;background:var(--hi);border-radius:6px;margin:10px 0 4px}.gauge i{display:block;height:100%;border-radius:6px;transition:width .5s}.gauge u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);border-radius:1px}.gscale{display:flex;justify-content:space-between;font-size:11px;color:var(--mut)}
+.pv{border-left:5px solid var(--g2);background:var(--hi);border-radius:12px;padding:12px;margin-top:10px}.pv.kuning{border-color:var(--am);background:color-mix(in srgb,var(--am) 12%,var(--sf))}.pv.merah{border-color:var(--rd);background:color-mix(in srgb,var(--rd) 11%,var(--sf))}.pv ul,.card ul{margin:6px 0 0;padding-left:18px}.pv li,.card li{margin:2px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:14px}.tile{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:14px;text-align:left;font:inherit;color:var(--ink);cursor:pointer;transition:.15s;box-shadow:var(--sh)}.tile:hover{border-color:var(--g2);transform:translateY(-2px)}.tile .ti{width:40px;height:40px;border-radius:12px;background:var(--hi);color:var(--g);display:grid;place-items:center}.tile b{display:block;margin:8px 0 2px}
+.rg{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-radius:12px;padding:9px 8px;text-align:left;color:var(--ink);cursor:pointer;font:inherit}.rg:hover{background:var(--s2)}.rg.on{background:var(--hi)}.rg small{display:block;color:var(--mut);font-size:12px}.rg .gv{width:96px;text-align:right}.rg .gv b{font-size:14px}
+.mini{position:relative;display:block;height:6px;background:var(--hi);border-radius:4px;margin-top:4px}.mini i{display:block;height:100%;border-radius:4px}.mini u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}.dot.hijau{background:var(--g2)}.dot.kuning{background:var(--am)}.dot.merah{background:var(--rd)}
+label{display:block;font-weight:600;margin:12px 0 5px;font-size:13px}input[type=number],select,textarea{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--bd);background:var(--s2);color:var(--ink);font:inherit}input:focus,select:focus,textarea:focus{outline:2px solid var(--g2);outline-offset:1px}
+.unit{position:relative}.unit span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:13px}
+.ck{display:flex;gap:10px;align-items:center;font-weight:500;margin:6px 0;padding:9px 10px;border:1px solid var(--bd);border-radius:12px;background:var(--s2);cursor:pointer}.ck input{width:18px;height:18px;accent-color:var(--g2)}
+.step{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;margin:2px 0 4px}.step span{width:26px;height:26px;border-radius:50%;background:var(--g);color:var(--on);display:grid;place-items:center;font-size:13px}
+.cw{position:relative;width:100%}
+.donutw{position:relative;width:170px;height:170px;flex:none}.donutw .ctr{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}.ctr b{font-size:26px;display:block;line-height:1}.ctr small{font-size:11px;color:var(--mut)}
+.leg{display:grid;gap:6px;margin-top:10px}.leg div{display:flex;align-items:center;gap:8px;font-size:13px}.leg div b{margin-left:auto}
+.lvl{display:flex;gap:8px}.bdg{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--hi);color:var(--mut);opacity:.5}.bdg.on{background:var(--g);color:var(--on);opacity:1}
+.tbw{overflow-x:auto}table.tb{width:100%;border-collapse:collapse;font-size:13.5px}table.tb th{text-align:left;color:var(--mut);font-weight:600;font-size:12px;padding:8px;border-bottom:1px solid var(--bd);white-space:nowrap}table.tb td{padding:9px 8px;border-bottom:1px solid var(--bd)}table.tb td.n{text-align:right;font-variant-numeric:tabular-nums}table.tb tr:last-child td{border-bottom:0}
+.tl{display:grid;gap:0}.tli{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:10px 0;border-bottom:1px dashed var(--bd)}.tli:last-child{border:0}.tli b{color:var(--g)}
+.callout{display:flex;gap:12px;align-items:center;background:var(--hi);border-radius:12px;padding:12px;margin-top:10px}.callout b{font-size:24px;color:var(--g)}
+details{border-top:1px solid var(--bd);padding:10px 0}details:first-of-type{border-top:0}summary{cursor:pointer;font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#14281D;color:#fff;padding:10px 18px;border-radius:14px;opacity:0;transition:.3s;pointer-events:none;z-index:1300;max-width:90%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3)}#toast.on{opacity:1}
+.empty{text-align:center;padding:26px 16px}.empty .ti{margin:0 auto 8px;width:48px;height:48px;border-radius:50%;background:var(--hi);color:var(--g);display:grid;place-items:center}
+@media (max-width:640px){#seg .lb,.brand small{display:none}.bl{display:none}.k b{font-size:19px}.mapw{min-height:380px}}
+</style></head><body>
+<header><div class="hin"><div class="brand"><span class="logo" id="lg"></span><div><b>Green Linkage</b><small>Ketertelusuran biomassa co-firing</small></div></div><div id="seg"></div><button class="tb2" id="th" aria-label="Ganti tema"></button></div></header>
+<main id="m"></main><nav id="nav"></nav><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),fmt=(n,d=2)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d,minimumFractionDigits:d});
+const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+const hexA=(h,a)=>{h=(h||'#888').replace('#','');if(h.length==3)h=h.split('').map(x=>x+x).join('');const n=parseInt(h,16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${a})`};
+const IC={map:'M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15',box:'M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8',scale:'M12 3v18M5 21h14M5 7h14M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',chart:'M4 20V10M10 20V4M16 20v-7M22 20H2',leaf:'M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19l8-8',pin:'M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12zM12 11.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z',user:'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6',shield:'M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z',moon:'M20 14A8 8 0 1110 4a6 6 0 0010 10z',sun:'M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',plus:'M12 5v14M5 12h14',minus:'M5 12h14',fit:'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',check:'M4 12l5 5L20 6',copy:'M9 9h11v11H9zM5 15V4h11',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6z',alert:'M12 3l10 18H2zM12 10v4M12 17.5v.5',flag:'M5 21V4h11l-2 4 2 4H5',inbox:'M3 13h5l2 3h4l2-3h5M5 5h14l2 8v6H3v-6z'};
+const I=(n,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${IC[n]}"/></svg>`;
+/* Siluet cadangan, hanya dipakai bila ubin peta gagal dimuat */
+const LAND=[[[5.6,95.4],[5,97.5],[3.8,98.7],[2.5,100.3],[1.7,101.5],[1,102.8],[0.3,103.6],[-1,104.1],[-2.2,104.9],[-3.3,106],[-5,105.9],[-5.9,105.8],[-5.8,104.6],[-4.5,103],[-3.8,102.3],[-2.2,101],[-0.9,100.35],[0.5,98.5],[1.7,97.3],[3,96.2],[4.5,95.9]],[[-6,105.9],[-6.1,106.8],[-6.3,108.4],[-6.8,109.1],[-6.9,110.4],[-6.5,111.2],[-6.9,112.7],[-7.7,113.7],[-8.3,114.4],[-8.7,114.4],[-8.4,113],[-8.3,111.2],[-8.2,110],[-7.8,108.5],[-7.7,107.2],[-7.4,106.4],[-6.8,105.3]],[[2,109.6],[3.5,113.5],[4.8,115.5],[6.9,116.7],[5,119.2],[4.2,117.8],[2,118],[1,118.8],[0,117.5],[-1.2,116.8],[-2.9,116.3],[-3.8,115.7],[-4.1,114.6],[-3.4,114],[-3.3,112.5],[-3.3,111.5],[-2.7,110.3],[-1.5,109.9],[-0.1,109.2]],[[1.5,125.1],[0.9,124.2],[0.5,122],[0.9,120.3],[-0.4,119.8],[-1.7,119.4],[-3.4,118.9],[-5.5,119.3],[-5.6,120.4],[-4,120.5],[-2.9,121.1],[-3.4,122.4],[-4.8,122.9],[-4,123.1],[-3,122.4],[-2.3,121.6],[-1.2,123.3],[-0.8,122.2],[-0.8,121.3],[0.4,121.9],[0.5,123.5],[1.2,124.9]],[[-0.9,131.2],[-0.5,133],[-1.8,134.9],[-1.5,137.5],[-2.5,140],[-2.6,141],[-9.1,141],[-8.4,140.5],[-8,138.5],[-6,138],[-4.5,136],[-3.9,133.9],[-3.3,132.5],[-2,132],[-1.3,131.6]]];
+const BD=[[-11,94.8],[6.2,141.2]];
+const R=[{id:'tu',n:'Tojo Una-Una',pv:'Sulawesi Tengah',pot:400,k0:300,al:1,t:.85,c:[-0.88,121.6]},{id:'dgl',n:'Donggala',pv:'Sulawesi Tengah',pot:1200,k0:300,al:0,t:.2,c:[-0.67,119.74]},{id:'pm',n:'Parigi Moutong',pv:'Sulawesi Tengah',pot:1000,k0:450,al:1,t:.5,c:[-0.5,120.2]},{id:'ps',n:'Poso',pv:'Sulawesi Tengah',pot:700,k0:620,al:2,t:1,c:[-1.4,120.75]},{id:'bg',n:'Banggai',pv:'Sulawesi Tengah',pot:800,k0:200,al:0,t:.3,c:[-0.95,122.6]},{id:'sw',n:'Sawahlunto',pv:'Sumatera Barat',pot:500,k0:150,al:0,t:0,c:[-0.68,100.77]},{id:'td',n:'Tanah Datar',pv:'Sumatera Barat',pot:900,k0:250,al:0,t:.15,c:[-0.47,100.6]},{id:'sl',n:'Solok',pv:'Sumatera Barat',pot:800,k0:350,al:0,t:.45,c:[-0.95,100.9]}];
+const P=[['PLTU Ampana',-0.87,121.6,1],['PLTU Ombilin',-0.68,100.77,1],['PLTU Suralaya',-5.89,106.03],['PLTU Labuan',-6.35,105.83],['PLTU Pelabuhan Ratu',-7,106.5],['PLTU Tanjung Jati B',-6.45,110.75],['PLTU Adipala',-7.68,109.13],['PLTU Paiton',-7.71,113.58],['PLTU Jeranjang',-8.7,116.07],['PLTU Tarahan',-5.5,105.3],['PLTU Pangkalan Susu',4.1,98.2]];
+const J={sekam:'Sekam padi',cangkang:'Cangkang sawit',tongkol:'Tongkol jagung',serbuk:'Serbuk gergaji',kayu:'Kayu (chip/log)',pelet:'Pelet kayu'};
+const SC={r:['Rendah',.23,.56],m:['Menengah',.77,1.84],h:['Tinggi 2030',2.1,4.31]};
+const RL={pem:['Pemasok','user','Mencatat kiriman dan titik asal',['home','kirim','dash']],ver:['Verifikator Muda','search','Memeriksa titik asal kiriman kuning',['home','ver','dash']],pln:['Petugas PLN','shield','Memutuskan status kuning dan menahan pembayaran',['home','neraca','ver','dash']]};
+const NV={home:['map','Peta'],kirim:['box','Kirim'],neraca:['scale','Neraca'],ver:['search','Verifikasi'],dash:['chart','Dasbor']};
+const LBL={hijau:'Hijau',kuning:'Kuning',merah:'Merah'},CL={hijau:'g2',kuning:'am',merah:'rd'};
+let S;try{S=JSON.parse(localStorage.getItem('gl2'))}catch(e){}S=S||{ships:[],pts:0,theme:'',role:'pem'};
+const save=()=>{try{localStorage.setItem('gl2',JSON.stringify(S))}catch(e){}};
+let ROLE=S.role||'pem',tab='home',flt='all',scen='live',last=null,MP,SUP,PKM,MK={},VIEW=null,SEL=null,PK={rid:'tu'},LY={pltu:1,warn:1,ship:0,base:'map'},CH=[],FBW=0;
+const toast=t=>{const e=$('#toast');e.textContent=t;e.className='on';clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',2600)};
+const reg=id=>R.find(r=>r.id==id),klaim=id=>reg(id).k0+S.ships.filter(s=>s.rid==id).reduce((a,s)=>a+s.w,0),eff=s=>s.fin||s.st,pend=()=>S.ships.filter(s=>s.st=='kuning'&&!s.fin);
+const B=s=>`<span class="b ${s}">${LBL[s]}</span>`;
+function ev(i){const r=reg(i.rid),ism=(klaim(i.rid)+i.w)/r.pot,rs=[];let st='hijau';const up=x=>{if(st=='hijau')st=x};
+if(ism>1){st='merah';rs.push(`Indeks Surplus Mustahil ${fmt(ism)} melampaui 1: klaim melebihi potensi limbah kabupaten`)}else if(ism>.85){up('kuning');rs.push(`ISM ${fmt(ism)} mendekati ambang 1`)}
+if(r.al==2){st='merah';rs.push('Peringatan kehilangan tutupan hutan tinggi di radius pasokan')}else if(r.al==1){up('kuning');rs.push('Peringatan kehilangan tutupan hutan ringan di radius pasokan')}
+if(['kayu','pelet'].includes(i.j)&&!i.doc){up('kuning');rs.push('Kayu tanpa nomor dokumen legalitas')}
+if(i.pk&&!i.sup){up('kuning');rs.push('Pengepul belum mencantumkan daftar pemasok asal')}
+if(!rs.length)rs.push('Klaim di bawah potensi wilayah dan tanpa peringatan hutan');return{ism,st,rs}}
+function add(i){const e=ev(i),r=reg(i.rid),s={id:'GL-'+(101+S.ships.length),...i,ism:e.ism,st:e.st,rs:e.rs,t:Date.now(),ll:i.ll||[+(r.c[0]+Math.random()*.2-.1).toFixed(4),+(r.c[1]+Math.random()*.2-.1).toFixed(4)]};S.ships.push(s);save();return s}
+const T=()=>{const t={hijau:0,kuning:0,merah:0};S.ships.forEach(s=>t[eff(s)]+=s.w);t.all=t.hijau+t.kuning+t.merah;t.rl=t.all?t.hijau/t.all*100:0;return t};
+if(!S.ships.length)[['dgl','sekam',30],['sw','cangkang',25],['td','tongkol',40],['sl','serbuk',30],['tu','serbuk',60],['ps','pelet',80],['pm','kayu',50],['bg','sekam',40]].forEach(a=>add({rid:a[0],j:a[1],w:a[2],doc:false,pk:false,sup:false}));
+if(S.base==null){S.base=T().rl;save()}
+const ismOf=r=>scen=='live'?klaim(r.id)/r.pot:SC[scen][1]+(SC[scen][2]-SC[scen][1])*r.t;
+const rst=r=>{const i=ismOf(r);return i>1||r.al==2?'merah':i>.85||r.al==1?'kuning':'hijau'};
+const why=r=>{const i=ismOf(r),a=[];a.push(i>1?`ISM ${fmt(i)} melampaui ambang 1: tonase mustahil seluruhnya berasal dari limbah`:i>.85?`ISM ${fmt(i)} mendekati ambang 1`:`ISM ${fmt(i)} di bawah ambang`);if(r.al)a.push(r.al==2?'Peringatan kehilangan tutupan hutan tinggi':'Peringatan kehilangan tutupan hutan ringan');return a};
+const nearest=a=>{let b=null,d=1.3;R.forEach(r=>{const x=Math.hypot(r.c[0]-a[0],r.c[1]-a[1]);if(x<d){d=x;b=r}});return b};
+const scl=()=>scen=='live'?1.5:4.5,scName=()=>scen=='live'?'Data berjalan':'Skenario '+SC[scen][0].toLowerCase();
+const isDark=()=>document.documentElement.dataset.theme=='dark';
+
+/* ===================== PETA (Leaflet + ubin nyata) ===================== */
+/* Penyedia ubin TANPA API key. CARTO (basemaps.cartocdn.com) kini mewajibkan API key, jadi tidak dipakai.
+   Urutan = rantai cadangan: bila penyedia pertama gagal, otomatis pindah ke berikutnya, lalu ke siluet sederhana. */
+const ESRI='https://server.arcgisonline.com/ArcGIS/rest/services/',EA='Ubin &copy; <a href="https://www.esri.com">Esri</a>',OSM_A='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const TILES={
+map_l:[{u:ESRI+'World_Street_Map/MapServer/tile/{z}/{y}/{x}',a:EA+', HERE, Garmin, '+OSM_A,z:18},{u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',a:OSM_A,z:18},{u:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',a:OSM_A+', SRTM | &copy; OpenTopoMap',z:17,s:'abc'}],
+map_d:[{u:ESRI+'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',a:EA+', HERE, Garmin, '+OSM_A,z:16,lab:ESRI+'Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'},{u:ESRI+'World_Street_Map/MapServer/tile/{z}/{y}/{x}',a:EA,z:18},{u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',a:OSM_A,z:18}],
+sat:[{u:ESRI+'World_Imagery/MapServer/tile/{z}/{y}/{x}',a:'Citra '+EA+', Maxar, Earthstar Geographics',z:18,lab:ESRI+'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}'},{u:ESRI+'World_Street_Map/MapServer/tile/{z}/{y}/{x}',a:EA,z:18}]};
+function baseLayer(m,mode){const list=mode=='sat'?TILES.sat:(isDark()?TILES.map_d:TILES.map_l);let k=0,ly=null,lab=null,fb=null;
+const fallback=()=>{if(fb)return;fb=L.layerGroup(LAND.map(p=>L.polygon(p,{color:css('--lb'),weight:1,fillColor:css('--ld'),fillOpacity:1,interactive:false}))).addTo(m);if(!FBW){FBW=1;toast('Ubin peta tidak terjangkau, memakai siluet sederhana')}};
+const use=i=>{if(ly)ly.remove();if(lab){lab.remove();lab=null}if(i>=list.length)return fallback();const t=list[i];let ok=0,bad=0;
+ly=L.tileLayer(t.u,{subdomains:t.s||'abc',maxZoom:18,maxNativeZoom:t.z,attribution:t.a}).addTo(m);
+if(t.lab)lab=L.tileLayer(t.lab,{maxZoom:18,maxNativeZoom:t.z,pane:'overlayPane',opacity:.9}).addTo(m);
+ly.on('tileload',()=>{ok++;if(fb){fb.remove();fb=null}});
+ly.on('tileerror',()=>{if(++bad>3&&!ok)use(i+1)})};
+use(0)}
+function zc(m){const z=m.getZoom(),c=m.getContainer();c.classList.toggle('zlo',z<5.6);c.classList.toggle('zhi',z>=7)}
+function drawMap(id,o={}){if(MP){MP.remove();MP=null}
+const m=MP=L.map(id,{zoomControl:false,minZoom:4,maxZoom:16,zoomSnap:.25,maxBounds:[[-20,85],[16,152]],maxBoundsViscosity:.8});
+m.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
+if(o.keep&&VIEW)m.setView(VIEW[0],VIEW[1]);else m.fitBounds(o.b||BD,{padding:[12,12]});
+baseLayer(m,o.mini?'map':LY.base);
+L.control.scale({imperial:false,position:'bottomright'}).addTo(m);
+if(o.keep)m.on('moveend',()=>VIEW=[m.getCenter(),m.getZoom()]);
+m.on('zoomend',()=>zc(m));zc(m);
+if(o.warn)R.filter(r=>r.al).forEach(r=>L.circle(r.c,{radius:45000,color:css('--rd'),weight:1.5,dashArray:'5 5',fillColor:css('--rd'),fillOpacity:r.al==2?.2:.09,interactive:false}).addTo(m));
+if(o.ships)S.ships.forEach(s=>{if(o.ships=='q'&&!(s.st=='kuning'&&!s.fin))return;L.circleMarker(s.ll,{radius:o.ships=='q'?7:5,color:'#fff',weight:1.5,fillColor:css('--'+CL[eff(s)]),fillOpacity:1}).addTo(m).bindTooltip(`<b>${s.id}</b> · ${reg(s.rid).n}<br>${J[s.j]}, ${s.w} ton · ${LBL[eff(s)]}`,{direction:'top',offset:[0,-6]})});
+if(o.pltu)P.forEach(p=>L.marker([p[1],p[2]],{icon:L.divIcon({className:'',iconSize:[0,0],html:`<i class="pl${p[3]?' pilot':''}"></i>`}),zIndexOffset:400}).addTo(m).bindTooltip(`<b>${p[0]}</b><br>${p[3]?'Lokasi uji coba 2027':'Cakupan perluasan 2029–2030'}`,{direction:'top',offset:[0,-10]}).on('click',e=>{L.DomEvent.stopPropagation(e);SEL={t:'p',id:p[0]};pan()}));
+MK={};R.forEach(r=>{const s=rst(r),mk=L.marker(r.c,{riseOnHover:true,zIndexOffset:s=='merah'?300:s=='kuning'?200:100,icon:L.divIcon({className:'',iconSize:[0,0],html:`<div class="pin ${s}${SEL&&SEL.t=='r'&&SEL.id==r.id?' sel':''}"><i></i><span class="nm">${r.n}</span><span>${fmt(ismOf(r))}</span></div>`})}).addTo(m).bindTooltip(`<b>${r.n}</b>, ${r.pv}<br>ISM ${fmt(ismOf(r))} · status ${LBL[s]}`,{direction:'top',offset:[0,-14]});mk.on('click',e=>{L.DomEvent.stopPropagation(e);o.mk&&o.mk(r)});MK[r.id]=mk});
+if(o.click)m.on('click',e=>o.click([e.latlng.lat,e.latlng.lng]));SUP=null;PKM=null;if(o.mini&&PK.ll)mark()}
+function hiSel(){Object.entries(MK).forEach(([k,mk])=>{const e=mk.getElement(),p=e&&e.querySelector('.pin');p&&p.classList.toggle('sel',!!SEL&&SEL.t=='r'&&SEL.id==k)})}
+function mark(){if(PKM)PKM.remove();PKM=L.circleMarker(PK.ll,{radius:9,color:'#fff',weight:3,fillColor:css('--g'),fillOpacity:1}).addTo(MP)}
+function supply(r,still){if(!MP)return;if(SUP)SUP.remove();SUP=L.circle(r.c,{radius:50000,color:css('--g'),weight:2,fillColor:css('--g'),fillOpacity:.08,interactive:false}).addTo(MP);if(!still)MP.flyToBounds(SUP.getBounds(),{padding:[50,50],duration:.8,maxZoom:9})}
+function pickR(id){PK={rid:id};SEL={t:'r',id};pan();supply(reg(id))}
+const hm=()=>drawMap('mp',{keep:1,warn:LY.warn,pltu:LY.pltu,ships:LY.ship?'all':0,mk:r=>pickR(r.id),click:a=>{const r=nearest(a);if(!r)return toast('Titik di luar radius pasokan kabupaten terdaftar');PK={rid:r.id,ll:a.map(x=>+x.toFixed(4))};SEL={t:'r',id:r.id,ll:PK.ll};pan();supply(r)}});
+const fit=()=>MP&&MP.flyToBounds(BD,{duration:.8});
+function bar(){$('#tb').innerHTML=`<div class="grp"><small>Skenario</small>${Object.entries({live:['Data berjalan'],...SC}).map(([k,v])=>`<button class="chip ${scen==k?'on':''}" onclick="sc('${k}')">${v[0]}</button>`).join('')}</div>
+<div class="grp"><small>Lapisan</small>${[['pltu','PLTU'],['warn','Peringatan hutan'],['ship','Titik kiriman']].map(a=>`<button class="chip ${LY[a[0]]?'on':''}" onclick="lay('${a[0]}')">${a[1]}</button>`).join('')}</div>
+<div class="grp"><small>Peta dasar</small>${[['map','Jalan'],['sat','Satelit']].map(a=>`<button class="chip ${LY.base==a[0]?'on':''}" onclick="bas('${a[0]}')">${a[1]}</button>`).join('')}</div>`}
+const redraw=()=>{hm();if(SEL&&SEL.t=='r')supply(reg(SEL.id),1)};
+const sc=s=>{scen=s;bar();redraw();pan()},lay=k=>{LY[k]=!LY[k];bar();redraw()},bas=k=>{LY.base=k;bar();redraw()};
+const gauge=(i,st)=>`<div class="gauge"><i style="width:${Math.min(i/scl(),1)*100}%;background:var(--${CL[st]})"></i><u style="left:${100/scl()}%"></u></div><div class="gscale"><span>0</span><span>ambang 1</span><span>${fmt(scl(),1)}</span></div>`;
+function panel(){if(!SEL)return`<div class="card empty"><div class="ti">${I('pin',22)}</div><b>Pilih kabupaten di peta</b><div class="mut">Ketuk pin kabupaten untuk melihat neraca limbahnya, ketuk wilayah mana pun untuk memilih titik asal, atau ketuk simbol belah ketupat untuk melihat PLTU.</div></div>`;
+if(SEL.t=='p'){const p=P.find(x=>x[0]==SEL.id);return`<div class="card"><div class="ch"><h3>${p[0]}</h3>${p[3]?'<span class="b hijau">Lokasi uji coba</span>':'<span class="b" style="background:var(--mut)">Cakupan perluasan</span>'}</div><p class="mut" style="margin:0">${p[3]?'Rantai pasok diuji pada 2027 (Ampana sebagai wilayah defisit limbah, Ombilin sebagai pembanding).':'Masuk perluasan ke 43 PLTU pada 2029 sampai 2030.'} Posisi pada peta bersifat indikatif.</p></div>`}
+const r=reg(SEL.id),i=ismOf(r),st=rst(r),n=S.ships.filter(s=>s.rid==r.id).length;
+return`<div class="card"><div class="ch"><div><h3>${r.n}</h3><span class="mut">${r.pv} · ${scName()}</span></div>${B(st)}</div>
+${gauge(i,st)}
+<div class="kpi mt" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">${kpi('scale',fmt(i),'ISM (ambang 1)',CL[st])}${kpi('leaf',fmt(r.pot,0),'potensi ton/bulan')}${kpi('box',fmt(scen=='live'?klaim(r.id):i*r.pot,0),'klaim ton/bulan')}${kpi('inbox',n,'kiriman tercatat')}</div>
+<ul>${why(r).map(x=>`<li>${x}</li>`).join('')}</ul><p class="mut">Lingkaran hijau pada peta adalah radius pasokan 50 km (asumsi prototipe).${SEL.ll?` Titik dipilih: ${SEL.ll.join(', ')}.`:''}</p>
+<div class="row wrap"><button class="btn" onclick="toK('${r.id}')">${I('box',16)}Catat kiriman dari sini</button><button class="btn ghost" onclick="go('${ROLE=='pln'?'neraca':'dash'}')">${I('chart',16)}Lihat statistik</button></div></div>`}
+const regList=()=>R.map(r=>({r,i:ismOf(r),s:rst(r)})).sort((a,b)=>b.i-a.i).map(({r,i,s})=>`<button class="rg ${SEL&&SEL.t=='r'&&SEL.id==r.id?'on':''}" onclick="pickR('${r.id}')"><span class="dot ${s}"></span><span class="grow"><b>${r.n}</b><small>${r.pv}</small></span><span class="gv"><b>${fmt(i)}</b><span class="mini"><i style="width:${Math.min(i/scl(),1)*100}%;background:var(--${CL[s]})"></i><u style="left:${100/scl()}%"></u></span></span></button>`).join('');
+const pan=()=>{const e=$('#pn');if(e)e.innerHTML=panel();const l=$('#rl');if(l)l.innerHTML=regList();hiSel()};
+function toK(id){if(ROLE!='pem'){ROLE='pem';S.role='pem';save();toast('Beralih ke peran Pemasok')}PK.rid=id;go('kirim')}
+
+/* ===================== GRAFIK (Chart.js) ===================== */
+const kpi=(ic,v,l,c='g')=>`<div class="k"><span class="ki" style="color:var(--${c});background:color-mix(in srgb,var(--${c}) 14%,transparent)">${I(ic,19)}</span><b>${v}</b><span>${l}</span></div>`;
+const cv=(id,h)=>`<div class="cw" style="height:${h}px"><canvas id="${id}" role="img"></canvas></div>`;
+const killCh=()=>{CH.forEach(c=>c.destroy());CH=[]};
+function chart(id,cfg){const el=document.getElementById(id);if(!el)return;if(!window.Chart){el.parentNode.innerHTML='<div class="mut">Grafik tidak dapat dimuat karena pustaka Chart.js tidak terjangkau.</div>';return}CH.push(new Chart(el,cfg))}
+function chDef(){if(!window.Chart)return;const d=Chart.defaults;d.font.family='"Schibsted Grotesk",system-ui,sans-serif';d.font.size=12;d.color=css('--mut');d.borderColor=css('--bd');d.maintainAspectRatio=false;d.responsive=true;d.animation.duration=700;
+const lg=d.plugins.legend.labels;lg.usePointStyle=true;lg.pointStyle='circle';lg.boxWidth=8;lg.boxHeight=8;lg.padding=14;
+const tt=d.plugins.tooltip;tt.backgroundColor=isDark()?'#E4EFE2':'#12342A';tt.titleColor=isDark()?'#12342A':'#fff';tt.bodyColor=isDark()?'#12342A':'#fff';tt.padding=10;tt.cornerRadius=10;tt.titleFont={weight:'700'};tt.boxPadding=4;tt.usePointStyle=true}
+const THR={id:'thr',afterDatasetsDraw(c,a,o){if(o.v==null)return;const x=c.scales.x,{top,bottom}=c.chartArea,px=x.getPixelForValue(o.v),g=c.ctx;g.save();g.strokeStyle=o.c;g.lineWidth=1.5;g.setLineDash([5,4]);g.beginPath();g.moveTo(px,top-4);g.lineTo(px,bottom);g.stroke();g.setLineDash([]);g.fillStyle=o.c;g.font='600 11px "Schibsted Grotesk",sans-serif';g.textAlign='left';g.fillText(o.l||'',px+5,top+8);g.restore()}};
+const yCat=()=>({grid:{display:false},border:{display:false},ticks:{color:css('--ink'),font:{weight:'600'}}});
+const xVal=(t,o={})=>({grid:{color:hexA(css('--mut'),.18)},border:{display:false},title:{display:!!t,text:t,color:css('--mut')},...o});
+function stackCfg(labels,rows){return{type:'bar',data:{labels,datasets:[['Hijau','hijau','--g2'],['Kuning','kuning','--am'],['Merah','merah','--rd']].map(([l,k,c])=>({label:l,data:rows.map(o=>o[k]),backgroundColor:css(c),borderRadius:4,borderSkipped:false,maxBarThickness:18}))},
+options:{indexAxis:'y',scales:{x:{...xVal('Tonase (ton)'),stacked:true,ticks:{callback:v=>fmt(v,0)}},y:{...yCat(),stacked:true}},plugins:{legend:{position:'top',align:'end'},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.x,0)} ton`}}}}}}
+const nrows=()=>R.map(r=>({r,i:ismOf(r),s:rst(r)})).sort((a,b)=>b.i-a.i);
+const ic=i=>css(i>1?'--rd':i>.85?'--am':'--g2');
+function ismCfg(rows){return{type:'bar',data:{labels:rows.map(x=>x.r.n),datasets:[{label:'ISM',data:rows.map(x=>+x.i.toFixed(3)),backgroundColor:rows.map(x=>ic(x.i)),borderRadius:7,borderSkipped:false,maxBarThickness:20}]},
+options:{indexAxis:'y',scales:{x:xVal('Indeks Surplus Mustahil',{min:0,suggestedMax:scl(),ticks:{callback:v=>fmt(v,1)}}),y:yCat()},plugins:{legend:{display:false},thr:{v:1,c:css('--ink'),l:'Ambang 1'},tooltip:{callbacks:{label:c=>` ISM ${fmt(c.parsed.x)}`,afterLabel:c=>{const x=rows[c.dataIndex];return x.i>1?' Mustahil seluruhnya limbah':x.i>.85?' Waspada':' Wajar'}}}}},plugins:[THR]}}
+function kpCfg(rows){return{type:'bar',data:{labels:rows.map(x=>x.r.n),datasets:[{label:'Potensi limbah',data:rows.map(x=>x.r.pot),backgroundColor:hexA(css('--g2'),.25),borderColor:css('--g2'),borderWidth:1.5,borderRadius:6,maxBarThickness:26},{label:'Klaim',data:rows.map(x=>Math.round(scen=='live'?klaim(x.r.id):x.i*x.r.pot)),backgroundColor:rows.map(x=>ic(x.i)),borderRadius:6,maxBarThickness:26}]},
+options:{scales:{y:xVal('ton/bulan',{beginAtZero:true,ticks:{callback:v=>fmt(v,0)}}),x:{grid:{display:false},border:{display:false},ticks:{color:css('--ink'),maxRotation:40,autoSkip:false}}},plugins:{legend:{position:'top',align:'end'},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y,0)} ton/bulan`}}}}}}
+function rngCfg(){const e=Object.values(SC);return{type:'bar',data:{labels:e.map(c=>c[0]),datasets:[{label:'Rentang ISM',data:e.map(c=>[c[1],c[2]]),backgroundColor:e.map(c=>css(c[1]>1?'--rd':c[2]>1?'--am':'--g2')),borderRadius:10,borderSkipped:false,maxBarThickness:24}]},
+options:{indexAxis:'y',scales:{x:xVal('ISM',{min:0,max:4.5,ticks:{callback:v=>fmt(v,1)}}),y:yCat()},plugins:{legend:{display:false},thr:{v:1,c:css('--ink'),l:'Ambang 1'},tooltip:{callbacks:{label:c=>` ${fmt(c.raw[0])} sampai ${fmt(c.raw[1])}`}}}},plugins:[THR]}}
+function trendCfg(){const p=[],lb=[];let g=0,a=0;S.ships.forEach(s=>{a+=s.w;if(eff(s)=='hijau')g+=s.w;p.push(+(g/a*100).toFixed(1));lb.push(s.id)});const G=css('--g2');
+return{type:'line',data:{labels:lb,datasets:[{label:'Rasio Limbah Terbukti',data:p,borderColor:G,borderWidth:2.5,tension:.35,pointRadius:3.5,pointHoverRadius:7,pointBackgroundColor:css('--sf'),pointBorderColor:G,pointBorderWidth:2,fill:true,backgroundColor:c=>{const {ctx,chartArea:ca}=c.chart;if(!ca)return'transparent';const gr=ctx.createLinearGradient(0,ca.top,0,ca.bottom);gr.addColorStop(0,hexA(G,.32));gr.addColorStop(1,hexA(G,0));return gr}},{label:'Nilai dasar',data:lb.map(()=>+S.base.toFixed(1)),borderColor:css('--mut'),borderDash:[6,5],borderWidth:1.5,pointRadius:0,pointHoverRadius:0,fill:false}]},
+options:{interaction:{mode:'index',intersect:false},scales:{y:xVal('',{min:0,max:100,ticks:{callback:v=>v+'%',stepSize:25}}),x:{grid:{display:false},border:{display:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:8}}},plugins:{legend:{position:'top',align:'end'},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y,1)}%`}}}}}}
+function donutCfg(t){return{type:'doughnut',data:{labels:['Hijau','Kuning','Merah'],datasets:[{data:[t.hijau,t.kuning,t.merah],backgroundColor:[css('--g2'),css('--am'),css('--rd')],borderColor:css('--sf'),borderWidth:3,hoverOffset:6,borderRadius:4}]},options:{cutout:'74%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed,0)} ton (${fmt(c.parsed/(t.all||1)*100,1)}%)`}}}}}}
+function funnelCfg(st){const g=css('--g2');return{type:'bar',data:{labels:st.map(x=>x[0]),datasets:[{data:st.map(x=>x[1]),backgroundColor:st.map((x,i)=>hexA(g,1-i*.16)),borderRadius:7,borderSkipped:false,maxBarThickness:22}]},options:{indexAxis:'y',scales:{x:xVal('Jumlah kiriman',{beginAtZero:true,ticks:{precision:0}}),y:yCat()},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x} kiriman`}}}}}}
+function ctxCfg(){return{type:'bar',data:{labels:['Pemakaian 2023','Target PLN 2025'],datasets:[{data:[.991,10],backgroundColor:[css('--g2'),css('--am')],borderRadius:8,borderSkipped:false,maxBarThickness:26}]},options:{indexAxis:'y',scales:{x:xVal('Juta ton biomassa',{beginAtZero:true,ticks:{callback:v=>fmt(v,0)}}),y:yCat()},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmt(c.parsed.x,c.parsed.x<1?3:0)} juta ton`}}}}}}
+const ctx=id=>`<div class="card"><div class="ch"><h3>Permintaan melaju, pasokan limbah tidak</h3></div>${cv(id,140)}<div class="callout"><b>30,7%</b><span class="mut">porsi limbah yang tersedia untuk co-firing. Selebihnya harus dicari dari sumber lain, dan di situlah risiko kayu hutan masuk.</span></div><p class="mut" style="margin:8px 0 0">Sumber: Kementerian ESDM (2024), Antara (2024), Squire et al. (2024).</p></div>`;
+
+/* ===================== BERANDA ===================== */
+const V={},AFT={};
+V.home=()=>{const t=T(),q=pend(),wf=q.filter(s=>s.find).length,bad=R.filter(r=>ismOf(r)>1).length,reds=S.ships.filter(s=>eff(s)=='merah').length;
+const task={pem:['Catat kiriman dan pilih titik asalnya langsung di peta.','kirim','Catat kiriman'],ver:[`${q.length} kiriman kuning menunggu pemeriksaan titik asal.`,'ver','Buka antrean'],pln:[`${wf} temuan menunggu keputusan, ${q.length-wf} belum diperiksa.`,'ver','Putuskan status']}[ROLE];
+return`<section class="hero"><div><span class="eyebrow">Ketertelusuran biomassa co-firing PLTU</span><h1>Dari mana asal tiap ton biomassa?</h1><p class="mut">Setiap kiriman diuji terhadap potensi limbah kabupaten asalnya dan peringatan kehilangan tutupan hutan. Pin menunjukkan Indeks Surplus Mustahil (ISM): di atas 1, tonase tidak mungkin seluruhnya limbah.</p></div></section>
+<div class="kpi">${kpi('inbox',S.ships.length,'kiriman diperiksa')}${kpi('leaf',fmt(t.rl,1)+'%','Rasio Limbah Terbukti','g2')}${kpi('alert',bad+' dari '+R.length,'kabupaten melewati ambang','am')}${kpi('flag',reds,'berkas merah','rd')}</div>
+<div class="mapw"><div id="mp"></div>
+<div class="ovl tr"><button class="ib" onclick="MP.zoomIn()" aria-label="Perbesar">${I('plus')}</button><button class="ib" onclick="MP.zoomOut()" aria-label="Perkecil">${I('minus')}</button><button class="ib" onclick="fit()" aria-label="Tampilkan seluruh Indonesia">${I('fit')}</button></div>
+<div class="ovl bl"><b>Status kabupaten</b><span><i style="background:var(--g2)"></i>Hijau: ISM ≤ 0,85</span><span><i style="background:var(--am)"></i>Kuning: mendekati ambang / hutan ringan</span><span><i style="background:var(--rd)"></i>Merah: ISM &gt; 1 / hutan tinggi</span><span><i style="background:var(--g2);border:2px solid #fff;border-radius:2px;transform:rotate(45deg)"></i>PLTU uji coba</span><span><i style="background:#fff;border:2px solid var(--hd);border-radius:2px;transform:rotate(45deg)"></i>PLTU perluasan</span></div></div>
+<div class="toolbar" id="tb"></div>
+<div class="split"><div id="pn">${panel()}</div><div class="card"><div class="ch"><h3>Kabupaten pemasok</h3><span class="mut">diurutkan menurut ISM</span></div><div id="rl">${regList()}</div></div></div>
+<div class="card"><div class="row wrap"><div class="grow"><h3>Tugas ${RL[ROLE][0]}</h3><div class="mut">${RL[ROLE][2]}. ${task[0]}</div></div><button class="btn" onclick="go('${task[1]}')">${task[2]}</button></div></div>
+<div class="ch" style="margin-top:6px"><h2>Tiga modul, satu tujuan</h2></div><div class="grid">
+${[['pin','Asal','Merekam identitas dan titik asal tiap kiriman','kirim'],['scale','Neraca','Mengadu klaim dengan potensi limbah wilayah','neraca'],['shield','Gerbang','Hijau, kuning, merah untuk setiap kiriman','dash'],['eye','Verifikator Muda','Memeriksa titik asal kiriman meragukan','ver']].map(a=>`<button class="tile" onclick="${RL[ROLE][3].includes(a[3])?`go('${a[3]}')`:`toast('Ganti peran untuk membuka modul ini')`}"><span class="ti">${I(a[0],22)}</span><b>${a[1]}</b><span class="mut">${a[2]}</span></button>`).join('')}</div>
+<div class="three">${ctx('cxh')}
+<div class="card"><div class="ch"><h3>Peta jalan</h3></div><div class="tl">${[['2027','Uji coba di PLTU Ampana dan PLTU Ombilin'],['2028','ISM terhitung di semua kabupaten pemasok, Rasio Limbah Terbukti naik dari nilai dasar'],['2029–2030','Perluasan ke 43 PLTU, menjadi syarat penerimaan biomassa']].map(a=>`<div class="tli"><b>${a[0]}</b><span>${a[1]}</span></div>`).join('')}</div></div></div>
+<div class="card"><div class="ch"><h3>Tanya jawab</h3></div>${[['Apakah aplikasi ini menghentikan co-firing?','Tidak. Green Linkage hanya memeriksa asal biomassa, bukan menghentikan program.'],['Siapa yang memutuskan status kuning?','Manusia, bukan mesin. Verifikator Muda memeriksa titik asal, lalu petugas PLN memutuskan beserta alasannya.'],['Siapa yang menindak status merah?','Kementerian Kehutanan. Berkas merah hanya diteruskan sebagai bahan penegakan.']].map(a=>`<details><summary>${a[0]}</summary><p class="mut">${a[1]}</p></details>`).join('')}</div>`};
+AFT.home=()=>{bar();hm();if(SEL&&SEL.t=='r')supply(reg(SEL.id),1);chart('cxh',ctxCfg())};
+
+/* ===================== KIRIM ===================== */
+const fv=()=>{const g=id=>$('#'+id);return{rid:g('rid').value,j:g('j').value,w:Math.max(0,+g('w').value||0),doc:g('doc').checked,pk:g('pk').checked,sup:g('sup').checked,ll:PK.ll}};
+function upd(){const i=fv(),e=i.w?ev(i):{st:''};$('#pv').className='pv '+e.st;$('#pv').innerHTML=i.w?`<div class="row"><b class="grow">Prakiraan Gerbang</b>${B(e.st)}</div><div class="mut">ISM wilayah setelah kiriman ini: ${fmt(e.ism)}</div><ul>${e.rs.map(x=>`<li>${x}</li>`).join('')}</ul>`:'<span class="mut">Isi berat kiriman untuk melihat prakiraan status.</span>';$('#dw').style.display=['kayu','pelet'].includes(i.j)?'flex':'none';$('#sw').style.display=i.pk?'flex':'none';$('#pl').innerHTML=PK.ll?`${I('pin',14)} Titik asal dari peta: <b>${PK.ll.join(', ')}</b>`:'Belum memilih titik di peta: koordinat otomatis dari ponsel (simulasi).'}
+function setPick(a){const r=nearest(a);if(!r)return toast('Titik di luar radius pasokan kabupaten terdaftar');PK={rid:r.id,ll:a.map(x=>+x.toFixed(4))};$('#rid').value=r.id;mark();upd()}
+function selR(){PK={rid:$('#rid').value};if(PKM){PKM.remove();PKM=null}MP.flyTo(reg(PK.rid).c,8,{duration:.6});upd()}
+V.kirim=()=>{if(ROLE!='pem')return`<div class="ph"><h2>Green Linkage Asal</h2></div><div class="card"><p>Hanya Pemasok yang mencatat kiriman. Sebagai ${RL[ROLE][0]}, Anda bisa memantau hasilnya di Dasbor.</p><button class="btn" onclick="setRole('pem')">Ganti ke Pemasok</button></div>`;
+const l=last&&S.ships.find(s=>s.id==last);return`<div class="ph"><h2>Green Linkage Asal</h2><p class="mut">Catat kiriman sebelum biomassa diterima. Deklarasi bisa dipalsukan, jadi setiap data diuji modul Neraca.</p></div>
+${l?`<div class="pv ${eff(l)}" style="margin:0 0 14px"><div class="row"><b class="grow">${l.id} tercatat</b>${B(eff(l))}</div><ul>${l.rs.map(x=>`<li>${x}</li>`).join('')}</ul><div class="mut">Titik asal ${l.ll.join(', ')}</div></div>`:''}
+<div class="two"><div class="card"><div class="step"><span>1</span>Pilih titik asal di peta</div><div class="mut">Ketuk pin kabupaten atau titik mana pun di dalam radius pasokan.</div><div class="mm tall" id="km"></div><div class="mut" id="pl"></div></div>
+<div class="card"><div class="step"><span>2</span>Isi data kiriman</div>
+<label>Kabupaten asal</label><select id="rid" onchange="selR()">${R.map(r=>`<option value="${r.id}" ${r.id==PK.rid?'selected':''}>${r.n}, ${r.pv}</option>`).join('')}</select>
+<label>Jenis biomassa (Pasal 2 Permen ESDM 12/2023)</label><select id="j" onchange="upd()">${Object.entries(J).map(a=>`<option value="${a[0]}">${a[1]}</option>`).join('')}</select>
+<label>Berat</label><div class="unit"><input id="w" type="number" min="0" value="20" oninput="upd()"><span>ton</span></div>
+<label class="ck"><input id="pk" type="checkbox" onchange="upd()">Saya pengepul</label>
+<label class="ck" id="sw" style="display:none"><input id="sup" type="checkbox" onchange="upd()">Daftar pemasok asal sudah dilampirkan</label>
+<label class="ck" id="dw" style="display:none"><input id="doc" type="checkbox" onchange="upd()">Nomor dokumen legalitas kayu tersedia</label>
+<div class="step" style="margin-top:16px"><span>3</span>Periksa prakiraan Gerbang</div><div id="pv" class="pv"></div><br><button class="btn wide" onclick="sub()">${I('check',16)}Kirim ke Gerbang</button></div></div>`};
+AFT.kirim=()=>{if(ROLE!='pem')return;drawMap('km',{mini:1,warn:1,b:[[-4,99],[2.5,124]],mk:r=>setPick(r.c),click:setPick});upd()};
+function sub(){const i=fv();if(!i.w)return toast('Isi berat kiriman dulu');const s=add(i);last=s.id;PK={rid:i.rid};toast(`${s.id}: status ${LBL[eff(s)]}`);go('kirim')}
+
+/* ===================== NERACA ===================== */
+V.neraca=()=>{const rows=nrows(),bad=rows.filter(x=>x.i>1).length;
+return`<div class="ph"><h2>Green Linkage Neraca</h2><p class="mut">ISM adalah klaim limbah dibagi potensi limbah kabupaten. Nilai di atas 1 berarti tonase yang diklaim mustahil seluruhnya berasal dari limbah.</p></div>
+<div class="chips">${[['live','Data berjalan'],['r','Skenario rendah'],['m','Menengah'],['h','Tinggi 2030']].map(a=>`<button class="chip ${scen==a[0]?'on':''}" onclick="scen='${a[0]}';go('neraca')">${a[1]}</button>`).join('')}</div>
+<div class="kpi">${kpi('alert',bad+' dari '+R.length,'kabupaten melewati ambang','rd')}${kpi('scale',fmt(Math.max(...rows.map(x=>x.i))),'ISM tertinggi','am')}${kpi('chart',fmt(rows.reduce((a,x)=>a+x.i*x.r.pot,0)/R.reduce((a,r)=>a+r.pot,0)),'ISM gabungan 8 kabupaten')}</div>
+<div class="three"><div class="card"><div class="ch"><h3>ISM per kabupaten</h3><span class="mut">${scName()}</span></div>${cv('cIsm',300)}<p class="mut" style="margin:6px 0 0">Garis putus-putus menandai ambang 1.</p></div>
+<div class="card"><div class="ch"><h3>Klaim dibanding potensi limbah</h3><span class="mut">ton/bulan</span></div>${cv('cKp',300)}<p class="mut" style="margin:6px 0 0">Batang berwarna yang melewati batang pucat berarti klaim melebihi potensi.</p></div></div>
+<div class="card"><div class="ch"><h3>Rincian per kabupaten</h3></div><div class="tbw"><table class="tb"><thead><tr><th>Kabupaten</th><th>Provinsi</th><th style="text-align:right">Potensi</th><th style="text-align:right">Klaim</th><th style="text-align:right">ISM</th><th>Hutan</th><th>Status</th></tr></thead><tbody>
+${rows.map(({r,i})=>`<tr><td><b>${r.n}</b></td><td class="mut">${r.pv}</td><td class="n">${fmt(r.pot,0)}</td><td class="n">${fmt(scen=='live'?klaim(r.id):i*r.pot,0)}</td><td class="n"><b>${fmt(i)}</b></td><td>${['–','Ringan','Tinggi'][r.al]}</td><td><span class="b ${i>1?'merah':i>.85?'kuning':'hijau'}">${i>1?'Mustahil':i>.85?'Waspada':'Wajar'}</span></td></tr>`).join('')}</tbody></table></div></div>
+<div class="card"><div class="ch"><h3>Rentang ISM per skenario</h3><span class="mut">skala 0 sampai 4,5</span></div>${cv('cRng',190)}<p class="mut" style="margin:6px 0 0">Hasil penulis dari data Squire et al. (2024): semakin tinggi rasio co-firing, semakin besar tonase yang mustahil berasal dari limbah.</p></div>`};
+AFT.neraca=()=>{const rows=nrows();chart('cIsm',ismCfg(rows));chart('cKp',kpCfg(rows));chart('cRng',rngCfg())};
+
+/* ===================== VERIFIKASI ===================== */
+const CK=['Foto berkoordinat berhasil diambil di titik asal','Titik berada di dalam radius pasokan','Tutupan hutan sekitar titik masih utuh','Tidak ada tunggul atau bekas tebangan baru'];
+V.ver=()=>{const q=pend(),f=S.ships.filter(s=>s.find).length,lv=Math.floor(S.pts/50)+1,bd=[['leaf','Pemula Hijau',f>=1],['eye','Mata Elang',f>=3],['shield','Penjaga Hutan',S.pts>=100]],pln=ROLE=='pln';
+return`<div class="ph"><h2>${pln?'Keputusan Status Kuning':'Verifikasi Lapangan'}</h2><p class="mut">${pln?'Putuskan status kiriman kuning berdasarkan temuan lapangan. Alasan wajib dicatat.':'Periksa titik asal kiriman kuning dan kirim temuan lapangan.'}</p></div>
+<div class="card row wrap"><div class="grow"><b>Lv ${lv} Verifikator Muda</b><div class="mut">${S.pts} poin · ${q.length} antrean · ${f} temuan terkirim</div><div class="gauge"><i style="width:${S.pts%50*2}%;background:var(--g2)"></i></div><div class="mut">${50-S.pts%50} poin lagi menuju Lv ${lv+1}</div></div><div class="lvl">${bd.map(b=>`<span class="bdg ${b[2]?'on':''}" title="${b[1]}">${I(b[0],20)}</span>`).join('')}</div></div>
+${q.length?`<div class="mm" id="vm"></div><p class="mut">Titik kuning pada peta adalah antrean pemeriksaan.</p>`:''}
+${ROLE=='pem'?`<div class="card"><p>Sebagai Pemasok, Anda hanya melihat status kiriman. Ganti peran untuk mengisi temuan atau memutuskan.</p><button class="btn" onclick="setRole('ver')">Jadi Verifikator Muda</button></div>`:''}
+${q.length?q.map(s=>`<div class="card" id="t${s.id}"><div class="ch"><div><h3>${s.id} · ${reg(s.rid).n}</h3><span class="mut">${J[s.j]}, ${s.w} ton, titik ${s.ll.join(', ')}</span></div>${B('kuning')}</div><ul>${s.rs.map(x=>`<li>${x}</li>`).join('')}</ul>
+${s.find?`<div class="pv ${s.find.n>=3?'':'merah'}"><b>Temuan Verifikator:</b> ${s.find.n}/4 sesuai${s.find.note?'. '+s.find.note:''}<br><b>Rekomendasi:</b> ${s.find.n>=3?'layak berstatus hijau':'indikasi pembukaan hutan, disarankan merah'}</div>${pln?`<label>Alasan keputusan (wajib)</label><textarea id="a${s.id}" rows="2"></textarea><br><br><div class="row wrap"><button class="btn" onclick="dec('${s.id}','hijau')">${I('check',16)}Hijaukan</button><button class="btn rd" onclick="dec('${s.id}','merah')">Tahan pembayaran</button></div>`:'<div class="mut mt">Menunggu keputusan Petugas PLN.</div>'}`
+:ROLE=='ver'?`<label>Daftar periksa lapangan</label>${CK.map(c=>`<label class="ck"><input type="checkbox">${c}</label>`).join('')}<label>Catatan lapangan</label><textarea id="n${s.id}" rows="2" placeholder="Opsional"></textarea><br><br><button class="btn" onclick="fnd('${s.id}')">Kirim temuan (+10 poin)</button>`:'<div class="mut mt">Belum ada temuan lapangan.'+(pln?' Keputusan baru dapat diambil setelah Verifikator Muda mengirim temuan.':'')+'</div>'}</div>`).join(''):`<div class="card empty"><div class="ti">${I('check',22)}</div><b>Antrean kosong</b><div class="mut">Semua kiriman kuning sudah diputuskan. Catat kiriman baru untuk menambah antrean.</div></div>`}`};
+AFT.ver=()=>{if(pend().length)drawMap('vm',{mini:1,warn:1,ships:'q',b:[[-4,99],[2.5,124]]})};
+function fnd(id){const n=$('#t'+id).querySelectorAll('input:checked').length,s=S.ships.find(x=>x.id==id);s.find={n,note:$('#n'+id).value.trim()};S.pts+=10;save();toast('Temuan terkirim, +10 poin');go('ver')}
+function dec(id,v){const a=$('#a'+id).value.trim();if(!a)return toast('Alasan keputusan wajib diisi');const s=S.ships.find(x=>x.id==id);s.fin=v;s.why=a;save();toast(v=='merah'?'Ditahan, berkas siap diteruskan ke Kemenhut':'Dihijaukan, pembayaran berjalan');go('ver')}
+
+/* ===================== DASBOR ===================== */
+const byT=(f,k)=>S.ships.filter(s=>f(s)==k).reduce((o,s)=>(o[eff(s)]+=s.w,o),{hijau:0,kuning:0,merah:0});
+V.dash=()=>{const t=T(),sh=S.ships,pot=R.reduce((x,r)=>x+r.pot,0),cl=R.reduce((x,r)=>x+klaim(r.id),0),dl=t.rl-S.base,over=R.filter(r=>klaim(r.id)/r.pot>1).length,q=pend(),L2=sh.filter(s=>flt=='all'||eff(s)==flt).slice().reverse(),red=sh.filter(s=>eff(s)=='merah'),pc=k=>fmt(t[k]/(t.all||1)*100,1)+'%';
+return`<div class="ph"><h2>Dasbor PLN, EBTKE, dan Kemenhut</h2><p class="mut">Ringkasan status tonase, tren, dan alur pemeriksaan seluruh kiriman.</p></div>
+<div class="three"><div class="card"><div class="ch"><h3>Rasio Limbah Terbukti</h3><span class="b ${dl>=0?'hijau':'merah'}">${dl>=0?'▲':'▼'} ${fmt(Math.abs(dl),1)} poin</span></div><div class="row wrap" style="gap:18px"><div class="donutw">${cv('cDn',170)}<div class="ctr"><div><b>${fmt(t.rl,1)}%</b><small>tonase hijau</small></div></div></div>
+<div class="grow"><div class="leg">${['hijau','kuning','merah'].map(k=>`<div><span class="dot ${k}"></span>${LBL[k]}<b>${fmt(t[k],0)} t · ${pc(k)}</b></div>`).join('')}</div><p class="mut">Tonase hijau dibanding seluruh tonase yang dibakar. Nilai dasar ${fmt(S.base,1)}%, sasaran 2028 di atas nilai dasar.</p></div></div></div>
+<div class="card"><div class="ch"><h3>Tren per kiriman</h3><span class="mut">kumulatif</span></div>${cv('cTr',230)}</div></div>
+<div class="kpi">${kpi('box',fmt(t.all,0),'ton tercatat')}${kpi('leaf',fmt(t.hijau,0),'ton hijau','g2')}${kpi('alert',fmt(t.kuning,0),'ton kuning','am')}${kpi('flag',fmt(t.merah,0),'ton merah','rd')}${kpi('scale',fmt(cl/pot),'ISM gabungan')}${kpi('pin',over+' dari '+R.length,'kabupaten di atas 1','rd')}</div>
+<div class="three"><div class="card"><div class="ch"><h3>Status tonase per kabupaten</h3></div>${cv('cKb',320)}</div>
+<div class="card"><div class="ch"><h3>Status tonase per jenis biomassa</h3></div>${cv('cJn',320)}</div></div>
+<div class="three"><div class="card"><div class="ch"><h3>Alur pemeriksaan</h3><span class="mut">${q.length} kiriman kuning masih menunggu</span></div>${cv('cFn',230)}</div>
+<div class="card"><div class="ch"><h3>Rentang ISM per skenario 2030</h3></div>${cv('cRg2',230)}</div></div>
+${ctx('cxd')}
+<div class="card"><div class="ch"><h3>Berkas merah untuk Kementerian Kehutanan</h3><span class="mut">${red.length} berkas</span></div>${red.length?red.map(s=>`<div class="row mt"><span class="dot merah"></span><span class="grow">${s.id} · ${reg(s.rid).n} · ${s.w} ton</span>${s.fw?'<span class="b hijau">Terkirim</span>':ROLE=='pln'?`<button class="btn ghost" onclick="fw('${s.id}')">Teruskan</button>`:'<span class="mut">Menunggu PLN</span>'}</div>`).join(''):'<span class="mut">Belum ada berkas merah.</span>'}</div>
+<div class="card"><div class="ch"><h3>Riwayat kiriman</h3></div><div class="chips">${[['all','Semua'],['hijau','Hijau'],['kuning','Kuning'],['merah','Merah']].map(a=>`<button class="chip ${flt==a[0]?'on':''}" onclick="flt='${a[0]}';go('dash')">${a[1]}</button>`).join('')}</div>
+${L2.map(s=>`<details><summary><span class="grow">${s.id} · ${reg(s.rid).n} · ${s.w} ton</span>${B(eff(s))}</summary><div class="mut">${J[s.j]}, ISM ${fmt(s.ism)}, titik ${s.ll.join(', ')}</div><ul>${s.rs.map(x=>`<li>${x}</li>`).join('')}</ul>${s.find?`<div>Temuan lapangan: ${s.find.n}/4 sesuai</div>`:''}${s.why?`<div><b>Keputusan PLN:</b> ${s.why}</div>`:''}</details>`).join('')||'<span class="mut">Tidak ada data.</span>'}</div>
+<div class="row wrap"><button class="btn ghost" onclick="cp(0)">${I('copy',16)}Salin ringkasan</button><button class="btn ghost" onclick="cp(1)">${I('copy',16)}Salin CSV</button><button class="btn ghost" onclick="if(confirm('Setel ulang semua data?')){try{localStorage.removeItem('gl2')}catch(e){}location.reload()}">Setel ulang</button></div>`};
+AFT.dash=()=>{const t=T(),sh=S.ships,red=sh.filter(s=>eff(s)=='merah'),js=Object.keys(J).filter(k=>sh.some(s=>s.j==k));
+chart('cDn',donutCfg(t));chart('cTr',trendCfg());
+chart('cKb',stackCfg(R.map(r=>r.n),R.map(r=>byT(s=>s.rid,r.id))));
+chart('cJn',stackCfg(js.map(k=>J[k]),js.map(k=>byT(s=>s.j,k))));
+chart('cFn',funnelCfg([['Kiriman tercatat',sh.length],['Kuning awal',sh.filter(s=>s.st=='kuning').length],['Ada temuan lapangan',sh.filter(s=>s.find).length],['Diputuskan PLN',sh.filter(s=>s.fin).length],['Diteruskan ke Kemenhut',red.filter(s=>s.fw).length]]));
+chart('cRg2',rngCfg());chart('cxd',ctxCfg())};
+function fw(id){S.ships.find(x=>x.id==id).fw=1;save();toast('Berkas diteruskan ke Kementerian Kehutanan');go('dash')}
+function cp(c){const t=T(),x=c?['id,kabupaten,jenis,ton,ism,status'].concat(S.ships.map(s=>[s.id,reg(s.rid).n,J[s.j],s.w,s.ism.toFixed(2),eff(s)].join(','))).join('\n'):`Green Linkage: ${fmt(t.all,0)} ton tercatat, Rasio Limbah Terbukti ${fmt(t.rl,1)}%, ${S.ships.filter(s=>eff(s)=='merah').length} berkas merah.`;try{navigator.clipboard.writeText(x).then(()=>toast('Tersalin'),()=>toast('Gagal menyalin'))}catch(e){toast('Gagal menyalin')}}
+
+/* ===================== PERAN, TEMA, NAVIGASI ===================== */
+function setRole(r){ROLE=S.role=r;save();if(!RL[r][3].includes(tab))tab=RL[r][3][0];toast(`Peran: ${RL[r][0]}. ${RL[r][2]}`);go(tab)}
+function go(t){killCh();if(MP){MP.remove();MP=null}tab=t;const q=pend().length;
+$('#th').innerHTML=I(isDark()?'sun':'moon',17);
+$('#seg').innerHTML=Object.entries(RL).map(([k,v])=>`<button class="${k==ROLE?'on':''}" data-r="${k}" aria-pressed="${k==ROLE}" title="${v[0]}">${I(v[1],16)}<span class="lb">${v[0]}</span></button>`).join('');
+$('#nav').innerHTML=RL[ROLE][3].map(k=>`<button class="${k==t?'on':''}" onclick="go('${k}')">${I(NV[k][0],20)}<span>${k=='ver'&&ROLE=='pln'?'Keputusan':NV[k][1]}${k=='ver'&&q?` <em>${q}</em>`:''}</span></button>`).join('');
+chDef();$('#m').innerHTML=V[t]();AFT[t]&&AFT[t]();scrollTo(0,0)}
+$('#lg').innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="'+IC.leaf+'"/></svg>';
+$('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setRole(b.dataset.r)});
+$('#th').addEventListener('click',()=>{const d=document.documentElement;S.theme=d.dataset.theme=='dark'?'light':'dark';d.dataset.theme=S.theme;save();go(tab)});
+document.documentElement.dataset.theme=S.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+go('home');
+</script></body></html>
